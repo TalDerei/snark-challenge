@@ -1,3 +1,5 @@
+// This directory contains a reference CPU implementation of Field Arithmetic using libff (C++ library for Finite Fields and Elliptic Curves)
+
 #include <cstdio>
 #include <vector>
 
@@ -6,10 +8,15 @@
 #include <libff/algebra/curves/mnt753/mnt4753/mnt4753_init.hpp>
 
 using namespace libff;
+using namespace std;
 
 Fq<mnt4753_pp> read_mnt4_fq(FILE* input) {
-  // bigint<mnt4753_q_limbs> n;
+  // Define a finite field with q elements : mnt4753_pp
   Fq<mnt4753_pp> x;
+  Fq<mnt4753_pp> y;
+  // Defining pointer to array of 12 64-bit limbs, mnt4753_q_limbs is 12L representing the size 
+  // of each element to be read * long int, and input is a file pointer to the data stream.
+  // This is represented as a little-endian length 12 array of 64-bit integers
   fread((void *) x.mont_repr.data, libff::mnt4753_q_limbs * sizeof(mp_size_t), 1, input);
   return x;
 }
@@ -89,11 +96,18 @@ int main(int argc, char *argv[])
 
     }
 
+    // The while loop increments n from 1024,2048,4096,8192 creating arrays for both
+    // the MNT4-753 curve and MNT6-753 curve, doing a multiplication for each respective curve 
+    // and adding the result to an output file. 
     while (true) {
       size_t elts_read = fread((void *) &n, sizeof(size_t), 1, inputs);
+      // cout << "size of elts_read is: " << elts_read << endl;
       if (elts_read == 0) { break; }
 
+      // x0, x1, y0, y1 : Array(𝔽MNT4753.q, n)
       std::vector<Fq<mnt4753_pp>> x0;
+      cout << "size of n is: " << n << endl;
+
       for (size_t i = 0; i < n; ++i) {
         x0.emplace_back(read_mnt4(inputs));
       }
@@ -112,8 +126,19 @@ int main(int argc, char *argv[])
         y1.emplace_back(read_mnt6(inputs));
       }
 
+      // out_x, out_y : Array(𝔽MNT4753.q, n)
+      // output out_x should have out_x[i] = x0[i] * x1[i]. where * is multiplication in the field 𝔽MNT4753.q.
+      // output out_y should have out_y[i] = y0[i] * y1[i]. where * is multiplication in the field 𝔽MNT6753.q.
       for (size_t i = 0; i < n; ++i) {
         write_mnt4(outputs, x0[i] * x1[i]);
+        // cout << "x0 is " << endl;
+        // x0[i].print();
+        // cout << "x1 is " << endl;
+        // x1[i].print();
+        // cout << "multiplication is " << endl;
+        // auto sum  = x0[i] * x1[i];
+        // sum.print();
+        // exit(0);
       }
 
       for (size_t i = 0; i < n; ++i) {

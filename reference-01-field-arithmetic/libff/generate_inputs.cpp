@@ -18,12 +18,13 @@ void write_mnt6_fq(FILE* output, Fq<mnt6753_pp> x) {
 
 int main(void)
 {
+    // initialize public parameters for field (i.e. size of field elements, prime field modulus, etc.)
     mnt4753_pp::init_public_params();
     mnt6753_pp::init_public_params();
 
     setbuf(stdout, NULL);
 
-    size_t n;
+    size_t n; 
 
     auto output = fopen("inputs", "w");
 
