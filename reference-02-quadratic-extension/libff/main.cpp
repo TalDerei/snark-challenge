@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
 
       // Define vectors x and y of q finite field elements from (Fq^2) mnt4753_pp, where each element 
       // is a pair (a0, a1) from Fq.
-      // x be will 1024 pairs of 196 bytes each, where each pair can be further deconstructed to 12 8 byte limbs
+      // x be will 1024 pairs of 192 bytes each, where each pair can be further deconstructed to 12 8 byte limbs
       std::vector<Fqe<mnt4753_pp>> x;
       for (size_t i = 0; i < n; ++i) {
         x.emplace_back(read_mnt4_q2(inputs));
