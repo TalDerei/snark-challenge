@@ -290,6 +290,7 @@ int main(int argc, char *argv[])
       for (size_t i = 0; i < n; ++i) { g6_2.emplace_back(read_mnt6g2(inputs)); }
 
       // Perform the computation
+      // Returns objects to interface with the MNT4753/MNT6753 G1/G2 groups
       G1<mnt4753_pp> h4_1 = G1<mnt4753_pp>::zero();
       for (size_t i = 0; i < n; ++i) { h4_1 = h4_1 + g4_1[i]; }
 

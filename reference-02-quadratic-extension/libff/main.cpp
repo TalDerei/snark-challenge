@@ -1,11 +1,14 @@
 #include <cstdio>
 #include <vector>
+#include <time.h>
+#include <chrono>
 
 #include <libff/algebra/curves/mnt753/mnt4753/mnt4753_pp.hpp>
 #include <libff/algebra/curves/mnt753/mnt4753/mnt4753_init.hpp>
 
 using namespace libff;
 using namespace std;
+
 
 Fq<mnt4753_pp> read_mnt4_fq(FILE* input) {
   // bigint<mnt4753_q_limbs> n;
@@ -65,6 +68,8 @@ void write_mnt4_fq2_numeral(FILE* output, Fqe<mnt4753_pp> x) {
 
 int main(int argc, char *argv[])
 {
+  auto start = chrono::steady_clock::now();
+
     // argv should be
     // { "main", "compute" or "compute-numeral", inputs, outputs }
 
@@ -110,6 +115,9 @@ int main(int argc, char *argv[])
       }
     }
     fclose(outputs);
+    auto end = chrono::steady_clock::now();
+    auto diff = end - start;
+    cout << chrono::duration <double, milli> (diff).count() << " ms" << endl;
 
     return 0;
 }
